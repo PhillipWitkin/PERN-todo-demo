@@ -19,10 +19,12 @@ export default function Todo(props) {
   const wasEditing = usePrevious(isEditing);
 
   function handleChange(e) {
+    console.log("TODO Input changed...", e.target.value);
     setNewName(e.target.value);
   }
 
   function handleSubmit(e) {
+    console.log("TODO Input submitted...", e.target);
     e.preventDefault();
     if (!newName.trim()) {
       return;
@@ -85,9 +87,9 @@ export default function Todo(props) {
             onClick={() => setEditing(true)}
             ref={editButtonRef}
             >
-              Edit <span className="visually-hidden">{props.name}</span>
-            </button>
-            <button
+            Edit <span className="visually-hidden">{props.name}</span>
+          </button>
+          <button
               type="button"
               className="btn btn__danger"
               onClick={() => props.deleteTask(props.id)}
