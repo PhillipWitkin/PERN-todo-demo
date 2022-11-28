@@ -1,9 +1,9 @@
 // import logo from '../styles/logo.svg'
 import React, { useState, useRef, useEffect } from "react";
-import '../styles/App.css';
-import Todo from "./Todo";
-import Form from "./Form";
-import FilterButton from "./FilterButton";
+import './styles/App.css';
+import Todo from "./components/Todo";
+import Form from "./components/Form";
+import FilterButton from "./components/FilterButton";
 import { nanoid } from "nanoid";
 
 
