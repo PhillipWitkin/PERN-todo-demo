@@ -1,25 +1,33 @@
 import logo from '../styles/logo.svg'
 import '../styles/App.css';
+import Todo from "./Todo";
 
-function App() {
+function App(props) {
+
+  const taskList = props.tasks.map((task) => (
+    <Todo 
+      id={task.id} 
+      name={task.name} 
+      completed={task.completed}
+    />
+  ));
+
   return (
-    <div className="App">
-      {/* <h1>Hello</h1> */}
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
+    <div className="todoapp stack-large">
+    <Form addTask={addTask} />
+      {/* <div className="filters btn-group stack-exception">
+        {filterList}
+      </div> */}
+      {/* <h2 id="list-heading" tabIndex="-1" ref={listHeadingRef}>
+        {headingText}
+      </h2> */}
+      <ul
+          role="list"
+          className="todo-list stack-large stack-exception"
+          aria-labelledby="list-heading"
         >
-          Learn React
-        </a>
-      </header>
-  
+          {taskList}
+      </ul>
     </div>
   );
 }
