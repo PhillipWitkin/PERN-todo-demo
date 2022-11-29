@@ -4,7 +4,7 @@ import './styles/App.css';
 import Todo from "./components/Todo";
 import Form from "./components/Form";
 import FilterButton from "./components/FilterButton";
-import { nanoid } from "nanoid";
+// import { nanoid } from "nanoid";
 
 
 function usePrevious(value) {
@@ -23,6 +23,7 @@ const FILTER_MAP = {
 
 const FILTER_NAMES = Object.keys(FILTER_MAP);
 
+const ApiUrl = "http://localhost:8001";
 
 function App(props) {
 
@@ -31,8 +32,32 @@ function App(props) {
 
   function addTask(name) {
     console.log("Adding task name: ", name);
-    const newTask = { id: "todo-" + nanoid(), name: name, completed: false };
-    setTasks([...tasks, newTask]);
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name, completed: false })
+    };
+    fetch(ApiUrl + "/tasks", requestOptions)
+        .then(async response => {
+            const isJson = response.headers.get('content-type')?.includes('application/json');
+            const data = isJson && await response.json();
+
+            if (!response.ok) {
+                // get error message from body or default to response status
+                const error = (data && data.message) || response.status;
+                return Promise.reject(error);
+            }
+            
+            const newTask = { id: data.id, name: data.name, completed: false };
+            setTasks([...tasks, newTask]);
+
+        })
+        .catch(error => {
+            // this.setState({ errorMessage: error.toString() });
+            console.error('There was an error!', error);
+        });
+    // const newTask = { id: "todo-" + nanoid(), name: name, completed: false };
+    // setTasks([...tasks, newTask]);
   }
 
   function toggleTaskCompleted(id) {
@@ -57,15 +82,38 @@ function App(props) {
 
 
   function editTask(id, newName) {
-    const editedTaskList = tasks.map(task => {
-    // if this task has the same ID as the edited task
-      if (id === task.id) {
-        //
-        return {...task, name: newName}
-      }
-      return task;
-    });
-    setTasks(editedTaskList);
+    // PUT request to /tasks/id
+    const requestOptions = {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: id, name: newName })
+    };
+    fetch(ApiUrl + `/tasks/${id}`, requestOptions)
+        .then(async response => {
+            const isJson = response.headers.get('content-type')?.includes('application/json');
+            const data = isJson && await response.json();
+
+            if (!response.ok) {
+                // get error message from body or default to response status
+                const error = (data && data.message) || response.status;
+                return Promise.reject(error);
+            }
+            
+            const editedTaskList = tasks.map(task => {
+              // if this task has the same ID as the edited task
+                if (id === task.id) {
+                  return {...task, name: newName}
+                }
+                return task;
+              });
+            setTasks(editedTaskList);
+
+        })
+        .catch(error => {
+            // this.setState({ errorMessage: error.toString() });
+            console.error('There was an error!', error);
+        });
+
   }
 
 
@@ -99,9 +147,34 @@ function App(props) {
   const prevTaskLength = usePrevious(tasks.length);
 
   useEffect(() => {
-    if (tasks.length - prevTaskLength === -1) {
-      listHeadingRef.current.focus();
-    }
+    // fetch(ApiUrl + "/tasks")
+    //     .then(response => response.json())
+    //     .then(data => this.setTasks(data));
+    
+    fetch(ApiUrl + "/tasks")
+        .then(async response => {
+            const isJson = response.headers.get('content-type')?.includes('application/json');
+            const data = isJson && await response.json();
+
+            // check for error response
+            if (!response.ok) {
+                // get error message from body or default to response status
+                const error = (data && data.message) || response.status;
+                return Promise.reject(error);
+            }
+            setTasks(data);
+            if (tasks.length - prevTaskLength === -1) {
+              listHeadingRef.current.focus();
+            }
+        })
+        .catch(error => {
+            // this.setState({ errorMessage: error.toString() });
+            console.error('There was an error!', error);
+        });
+
+    // if (tasks.length - prevTaskLength === -1) {
+    //   listHeadingRef.current.focus();
+    // }
   }, [tasks.length, prevTaskLength]);
 
 
