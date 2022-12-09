@@ -23,11 +23,11 @@ const FILTER_MAP = {
 
 const FILTER_NAMES = Object.keys(FILTER_MAP);
 
-const ApiUrl = "http://localhost:8001";
+const ApiUrl = "http://localhost:3001/api";
 
-function App(props) {
+function App() {
 
-  const [tasks, setTasks] = useState(props.tasks);
+  const [tasks, setTasks] = useState([]);
   const [filter, setFilter] = useState('All');
 
   function addTask(name) {
@@ -41,43 +41,102 @@ function App(props) {
         .then(async response => {
             const isJson = response.headers.get('content-type')?.includes('application/json');
             const data = isJson && await response.json();
-
+            
             if (!response.ok) {
                 // get error message from body or default to response status
                 const error = (data && data.message) || response.status;
                 return Promise.reject(error);
             }
-            
+            // updated react state of tasks
             const newTask = { id: data.id, name: data.name, completed: false };
             setTasks([...tasks, newTask]);
-
         })
         .catch(error => {
-            // this.setState({ errorMessage: error.toString() });
             console.error('There was an error!', error);
         });
     // const newTask = { id: "todo-" + nanoid(), name: name, completed: false };
     // setTasks([...tasks, newTask]);
   }
 
-  function toggleTaskCompleted(id) {
-    console.log("Toggling todo id:", id);
-    const updatedTasks = tasks.map(task => {
-      // if this task has the same ID as the edited task
-      if (id === task.id) {
-        // use object spread to make a new obkect
-        // whose `completed` prop has been inverted
-        return {...task, completed: !task.completed}
-      }
-      return task;
-    });
-    setTasks(updatedTasks);
+  function toggleTaskCompleted(id, completedStatus) {
+    console.log("Toggling todo id:", id, ", to status completed:", completedStatus);
+    // PUT request to /tasks/id
+    const requestOptions = {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: id, completed: completedStatus})
+    };
+    fetch(ApiUrl + `/tasks/${id}`, requestOptions)
+      .then(response => {
+        const isJson = response.headers.get('content-type')?.includes('application/json');
+        return isJson && response.json();
+      })
+      .then(data => {
+        console.log("data:", data);
+        const updatedTasks = tasks.map(task => {
+          // if this task has the same ID as the edited task
+          if (id === task.id) {
+            // use object spread to make a new obkect
+            // whose `completed` prop has been inverted
+            return {...task, completed: completedStatus}
+          }
+          return task;
+        });
+        setTasks(updatedTasks);
+      })
+      .catch(error => {
+        console.error('There was an error!', error);
+      });
+
+    // const updatedTasks = tasks.map(task => {
+    //   // if this task has the same ID as the edited task
+    //   if (id === task.id) {
+    //     // use object spread to make a new obkect
+    //     // whose `completed` prop has been inverted
+    //     return {...task, completed: completedStatus}
+    //   }
+    //   return task;
+    // });
+    // setTasks(updatedTasks);
   }
 
 
   function deleteTask(id) {
-    const remainingTasks = tasks.filter(task => id !== task.id);
-    setTasks(remainingTasks);
+    // delete request to /tasks/id
+    // fetch(ApiUrl + `/tasks/${id}`,  { method: 'DELETE' })
+    //   .then(response => {
+    //     const isJson = response.headers.get('content-type')?.includes('application/json');
+    //     return isJson && response.json();
+    //   })
+    //   .then(data => {
+    //     console.log("data:", data);
+    //     const remainingTasks = tasks.filter(task => id !== task.id);
+    //     setTasks(remainingTasks);
+    //   })
+    //   .catch(error => {
+    //     console.error('There was an error!', error);
+    //   });
+    
+    // delete request to /tasks/id
+    fetch(ApiUrl + `/tasks/${id}`,  { method: 'DELETE' })  
+      .then(async response => {
+        const data = await response.json();
+        // check for error response
+        if (!response.ok) {
+            // get error message from body or default to response status
+            const error = (data && data.message) || response.status;
+            return Promise.reject(error);
+        }
+        console.log("data:", data);
+        const remainingTasks = tasks.filter(task => id !== task.id);
+        setTasks(remainingTasks);
+      })
+      .catch(error => {
+        console.error('There was an error!', error);
+      });
+      
+    // const remainingTasks = tasks.filter(task => id !== task.id);
+    // setTasks(remainingTasks);
   }
 
 
@@ -98,7 +157,7 @@ function App(props) {
                 const error = (data && data.message) || response.status;
                 return Promise.reject(error);
             }
-            
+            // update react state of tasks
             const editedTaskList = tasks.map(task => {
               // if this task has the same ID as the edited task
                 if (id === task.id) {
@@ -107,7 +166,6 @@ function App(props) {
                 return task;
               });
             setTasks(editedTaskList);
-
         })
         .catch(error => {
             // this.setState({ errorMessage: error.toString() });
@@ -147,30 +205,41 @@ function App(props) {
   const prevTaskLength = usePrevious(tasks.length);
 
   useEffect(() => {
-    // fetch(ApiUrl + "/tasks")
-    //     .then(response => response.json())
-    //     .then(data => this.setTasks(data));
-    
     fetch(ApiUrl + "/tasks")
-        .then(async response => {
-            const isJson = response.headers.get('content-type')?.includes('application/json');
-            const data = isJson && await response.json();
-
-            // check for error response
-            if (!response.ok) {
-                // get error message from body or default to response status
-                const error = (data && data.message) || response.status;
-                return Promise.reject(error);
-            }
-            setTasks(data);
-            if (tasks.length - prevTaskLength === -1) {
-              listHeadingRef.current.focus();
-            }
+        .then(response => {
+          const isJson = response.headers.get('content-type')?.includes('application/json');
+          return isJson && response.json();
+        })
+        .then(data => {
+          console.log("data:", data);
+          setTasks(data);
+          if (tasks.length - prevTaskLength === -1) {
+            listHeadingRef.current.focus();
+          }
         })
         .catch(error => {
-            // this.setState({ errorMessage: error.toString() });
-            console.error('There was an error!', error);
+          console.error('There was an error!', error);
         });
+    
+    // fetch(ApiUrl + "/tasks")
+    //     .then(async response => {
+    //         const isJson = response.headers.get('content-type')?.includes('application/json');
+    //         const data = isJson && await response.json();
+
+    //         // check for error response
+    //         if (!response.ok) {
+    //             // get error message from body or default to response status
+    //             const error = (data && data.message) || response.status;
+    //             return Promise.reject(error);
+    //         }
+    //         setTasks(data);
+    //         if (tasks.length - prevTaskLength === -1) {
+    //           listHeadingRef.current.focus();
+    //         }
+    //     })
+    //     .catch(error => {
+    //         console.error('There was an error!', error);
+    //     });
 
     // if (tasks.length - prevTaskLength === -1) {
     //   listHeadingRef.current.focus();
