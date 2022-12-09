@@ -22,10 +22,10 @@ exports.create = (req, res, next) => {
   // Save Task
   TaskModel.create(task)
     .then(data => {
-      res.status(200).json(data);
+      return res.status(200).json(data);
     })
     .catch(err => {
-      res.status(500).json({
+      return res.status(500).json({
         message:
           err.message || "Some error occurred while creating the Task."
       });
@@ -36,10 +36,10 @@ exports.create = (req, res, next) => {
 exports.findAll = (req, res, next) => {
   TaskModel.findAll()
     .then(data => {
-        res.status(200).json(data);
+        return res.status(200).json(data);
       })
     .catch(err => {
-        res.status(500).json({
+        return res.status(500).json({
             message:
             err.message || "Some error occurred while retrieving tutorials."
         });
@@ -56,9 +56,9 @@ exports.update = async (req, res) => {
         // console.log("Found ", task);
         task.set(req.body);
         await task.save();
-        res.json(task);
+        return res.json(task);
     } else {
-        res.send({
+        return res.send({
             message: `Cannot update Task with id=${id}.`
         });
     }
@@ -94,17 +94,17 @@ exports.delete = (req, res) => {
       })
         .then(num => {
           if (num == 1) {
-            res.send({
+            return res.send({
               message: "Task was deleted successfully!"
             });
           } else {
-            res.send({
+            return res.send({
               message: `Cannot delete Task with id=${id}. Maybe Task was not found!`
             });
           }
         })
         .catch(err => {
-          res.status(500).send({
+          return res.status(500).send({
             message: "Could not delete Task with id=" + id
           });
         });
