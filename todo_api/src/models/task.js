@@ -1,24 +1,40 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
-module.exports = (sequelize, DataTypes) => {
-  class Task extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
-    static associate(models) {
-      // define association here
+
+const { Sequelize, DataTypes } = require("sequelize");
+
+/**
+ * Import the Sequelize instance that you have exported
+ * in the config/database.js file.
+ */
+const sequelize = require("../config/database");
+/**
+ * Define a model that can be managed by Sequelize.
+ */
+const Task = sequelize.define(
+    "todo_tasks",
+    {
+        id: {
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
+            allowNull: false,
+            primaryKey: true,
+        },
+        name: {
+            type: DataTypes.STRING,
+            allowNull: false,
+        },
+        completed: {
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+        },
+        
+    },
+    {
+      timestamps: false
     }
-  }
-  Task.init({
-    name: DataTypes.STRING,
-    completed: DataTypes.BOOLEAN
-  }, {
-    sequelize,
-    modelName: 'Task',
-  });
-  return Task;
-};
+);
+
+/**
+ * Export the model, so that it can be used in any
+ * page to execute CRUD operations on the app_posts table.
+ */
+module.exports = Task;
