@@ -1,7 +1,4 @@
 const express = require('express');
-const router = express.Router();
-const bodyParser = require('body-parser');
-// const Pool = require("pg").Pool
 const app = express();
 const cors = require('cors');
 const db = require("./config/database");
@@ -32,6 +29,7 @@ app.get("/", function (req, res, next){
   res.status(200).json({ message: "Welcome to Tasks api" });
 });
 
+// API endpoints
 app.get("/api/tasks", tasksController.findAll);
 
 app.post("/api/tasks", tasksController.create);
@@ -49,37 +47,6 @@ const initApp = async () => {
   try {
       await db.authenticate();
       console.log("Connection has been established successfully.");
-    
-       // add hoc means of updating the database schema and inserting seed datra if the table if empty
-       // this would usually be handled by migrations and seeders 
-       db.sync({alter: true})
-          .then(() => {
-              console.log("Database and tables created");
-              if (TaskModel.findOne() == null){
-                console.log("Seeding empty Tasks table...");
-                TaskModel.bulkCreate([{
-                    name: 'Eat',
-                    completed: true,
-                  },
-                  {
-                   name: "Sleep",
-                   completed: false,
-                  },
-                  {
-                   name: "Repeat",
-                   completed: false,
-                  }
-                 ], {});
-              } else {
-                console.log("Tasks table already had entries, no seeding applied");
-              }
-              
-          })
-          .catch((err) => {
-              console.log("Failed to sync db: " + err.message);
-          });
-      
-          
           
       // Syncronize the Task model.
       TaskModel.sync({
