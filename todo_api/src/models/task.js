@@ -10,7 +10,7 @@ const sequelize = require("../config/database");
  * Define a model that can be managed by Sequelize.
  */
 const Task = sequelize.define(
-    "todo_tasks",
+    "Tasks",
     {
         id: {
             type: DataTypes.INTEGER,
