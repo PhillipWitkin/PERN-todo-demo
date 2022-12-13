@@ -4,11 +4,13 @@ RUN mkdir -p /app
 
 WORKDIR /app
 
-COPY . /app
+COPY ./ ./
+
+COPY package.json ./
+COPY package-lock.json ./
 
 RUN npm install -g nodemon &&\
-    npm install &&\
-    npm install --save-dev sequelize-cli  
+    npm install 
 
 EXPOSE 8082
 

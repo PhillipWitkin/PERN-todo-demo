@@ -64,24 +64,30 @@ const initApp = async () => {
       })
       .then(() => {
           console.log("Synced tasks table");
-          if (TaskModel.findOne() == null){
-            console.log("Seeding empty Tasks table...");
-            TaskModel.bulkCreate([{
-                name: 'Eat',
-                completed: true,
-              },
-              {
-               name: "Sleep",
-               completed: false,
-              },
-              {
-               name: "Repeat",
-               completed: false,
+          TaskModel.findAndCountAll()
+          .then(result => {
+            if (result.count < 1) {
+                // do you thing
+                
+                console.log("Seeding empty Tasks table...");
+                TaskModel.bulkCreate([{
+                    name: 'Eat',
+                    completed: true,
+                  },
+                  {
+                   name: "Sleep",
+                   completed: false,
+                  },
+                  {
+                   name: "Repeat",
+                   completed: false,
+                  }
+                 ], {});
+              } else {
+                console.log("Tasks table already had entries, no seeding applied");
               }
-             ], {});
-          } else {
-            console.log("Tasks table already had entries, no seeding applied");
-          }
+          })
+          
       })
       .catch((err) => {
           console.log("Failed to sync db table: " + err.message);

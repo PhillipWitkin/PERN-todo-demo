@@ -1,14 +1,16 @@
+version: '3.8'
 services:
   todo-db:
     container_name: todo_db_postgres_container
     image: postgres
     restart: always
     environment: 
-     - DATABASE_HOST=127.0.0.1
-     - POSTGRES_USER=postgres
-     - POSTGRES_PASSWORD=postgres
-     - POSTGRES_PORT=5432
-     - POSTGRES_DB=todo_db
+      DATABASE_HOST: 127.0.0.1
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: todo_db
+      PGDATA: /var/lib/postgresql/data
     ports:
      - '6432:5432'
     healthcheck:
@@ -38,19 +40,22 @@ services:
   todo-api:
     container_name: todo_api_container
     build: todo_api/
+    stdin_open: true
+    tty: true
     depends_on:
       todo-db:
         condition: service_healthy
     ports:
-      - '8082:8082'
+      - "8082:8082"
     environment: 
-      - NODE_ENV=development
-      - PORT=8082
-      - DATABASE_HOST=capstone-db
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=docker
-      - POSTGRES_PORT=5432
-      - POSTGRES_DB=capstone
+      NODE_ENV: development
+      PORT: 8082
+      POSTGRES_HOST: todo-db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: todo_db
+
     # volumes:
     #   - type: bind
     #     source: ./todo_api
@@ -63,7 +68,7 @@ services:
     depends_on:
       - 'todo-api'
     ports:
-      - '3001:3000'
+      - '3000:3000'
     # volumes:
     #   - type: bind
     #     source: ./ui
@@ -73,3 +78,6 @@ services:
 volumes:
   pgdatasource:
   pgadmin-data:
+
+networks:
+  default:

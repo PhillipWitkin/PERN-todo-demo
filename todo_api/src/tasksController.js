@@ -34,6 +34,7 @@ exports.create = (req, res, next) => {
 
 // Retrieve all Tasks from the database.
 exports.findAll = (req, res, next) => {
+  res.set("Access-Control-Allow-Origin", "*"); 
   TaskModel.findAll()
     .then(data => {
         return res.status(200).json(data);
@@ -50,6 +51,7 @@ exports.findAll = (req, res, next) => {
 
 // Update a Task by the id in the request
 exports.update = async (req, res) => {
+  res.set("Access-Control-Allow-Origin", "*"); 
     const id = req.params.id;
     const task = await TaskModel.findByPk(id);
     if (task != null){
@@ -88,6 +90,7 @@ exports.update = async (req, res) => {
 
 // Delete a Task with the specified id in the request
 exports.delete = (req, res) => {
+  res.set("Access-Control-Allow-Origin", "*"); 
     const id = req.params.id;
     TaskModel.destroy({
         where: { id: id }
