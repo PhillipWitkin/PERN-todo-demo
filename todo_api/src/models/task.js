@@ -33,6 +33,7 @@ const Task = sequelize.define(
     }
 );
 
+Task.sync();
 /**
  * Export the model, so that it can be used in any
  * page to execute CRUD operations on the app_posts table.
