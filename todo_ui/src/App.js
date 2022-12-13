@@ -23,7 +23,7 @@ const FILTER_MAP = {
 
 const FILTER_NAMES = Object.keys(FILTER_MAP);
 
-const ApiUrl = "http://localhost:3001/api";
+const ApiUrl = "http://localhost:8082/api";
 
 function App() {
 

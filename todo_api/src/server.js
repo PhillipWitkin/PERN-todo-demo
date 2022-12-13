@@ -4,7 +4,7 @@ const cors = require('cors');
 const db = require("./config/database");
 const TaskModel = require("./models/task");
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 8082;
 const PGHOST = process.env.POSTGRES_HOST || '127.0.0.1';
 const PGPORT = process.env.POSTGRES_PORT || 5432;
 
