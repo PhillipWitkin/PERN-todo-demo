@@ -4,7 +4,7 @@ const cors = require('cors');
 const db = require("./config/database");
 const TaskModel = require("./models/task");
 
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 8082;
 const PGHOST = process.env.POSTGRES_HOST || '127.0.0.1';
 const PGPORT = process.env.POSTGRES_PORT || 5432;
 
@@ -47,13 +47,41 @@ const initApp = async () => {
   try {
       await db.authenticate();
       console.log("Connection has been established successfully.");
-          
+      
+      // add hoc means of updating the database schema and inserting seed datra if the table if empty
+       // this would usually be handled by migrations and seeders 
+       db.sync({alter: true})
+          .then(() => {
+              console.log("Database and tables created");
+          })
+          .catch((err) => {
+              console.log("Failed to sync db: " + err.message);
+          });
+      
       // Syncronize the Task model.
       TaskModel.sync({
           alter: true,
       })
       .then(() => {
           console.log("Synced tasks table");
+          if (TaskModel.findOne() == null){
+            console.log("Seeding empty Tasks table...");
+            TaskModel.bulkCreate([{
+                name: 'Eat',
+                completed: true,
+              },
+              {
+               name: "Sleep",
+               completed: false,
+              },
+              {
+               name: "Repeat",
+               completed: false,
+              }
+             ], {});
+          } else {
+            console.log("Tasks table already had entries, no seeding applied");
+          }
       })
       .catch((err) => {
           console.log("Failed to sync db table: " + err.message);

@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon src/server.js",
-    "db:seed" : "npx sequelize db:seed:all"
+    "db:seed" : "npx sequelize db:seed:all",
+    "start:seed" : "npx sequelize db:migrate && npx sequelize db:seed:all && nodemon --watch ./ ./src/server.js",
+    "start:dev" : "nodemon --watch ./ ./src/server.js"
   },
   "keywords": [
     "nodejs",
