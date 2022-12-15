@@ -1,6 +1,6 @@
 # PERN Stack TODO App
 
-## **Purpose** - Demonstrate a simple TODO full-stack application with a Postgres database, Node Express API backend, and React frontend for containerization in Docker
+### **Purpose** - Demonstrate a simple TODO full-stack application with a Postgres database, Node Express API backend, and React frontend for containerization in Docker
 #  
 ### **Description** - This is a simple PERN stack application, a Todo List which performs CRUD operations on a single resource. It consists of a React front-end, back-end API using Node and Express, and persisting data in a Postresql database. 
 * The front end in React is based off https://github.com/mdn/todo-react, which is just a React front-end that uses only mock data. Fetch API calls were added to connect it to a back-end   
@@ -25,18 +25,20 @@
   * In case there of a merge conflict, we can update all remote branches, but save merging for later using git fetch <remote>:
     * `git fetch upstream`
 
-###  Switch to 'dockerized' branch
+###  Switch to the 'dockerized' branch
 * Navigate to the root of your local repository
-* Checkout to the dockerized branch by runnin `git checkout dockerized`
+* Checkout to the dockerized branch by running 
+  * `git checkout dockerized`
 
 ### Use Docker Compose to build and start the application
-* From the project root folder, run `docker-compose up` 
+* From the project root folder, run 
+  * `docker-compose up` 
   * This will build our Docker images, and start each service running in a seperate Docker container
 * Four containerized services are specfied in the docker-compose.yaml file:
   * todo-db - running our instance of postgres
   * pgadmin - running pgAdmin, a postgres workbench tool which monitors todo-db
   * todo-api - running the Express API backend server
-  * todo-ui - runnng Node server for React contents
+  * todo-ui - runnng the Node server for React contents
 * The database will be automatially created with a Tasks table defined, and data seeded  
 * The services will now be running in Docker, but can be reached via browser as if it were running natively
   * The client-facing UI can be reached by browser on localhost port 3000 - http://localhost:3000/
@@ -44,6 +46,3 @@
   * pgAdmin will run in a browser pointing at localhost port 8080, and redirect to http://localhost:8080/login?next=%2F for credentials
     * As set in docker-compose.yaml, username is set to phillip.witkin@galvanize.com
     * Password is set to 'docker'
-
-
-
