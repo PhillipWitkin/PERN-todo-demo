@@ -54,8 +54,6 @@ function App() {
         .catch(error => {
             console.error('There was an error!', error);
         });
-    // const newTask = { id: "todo-" + nanoid(), name: name, completed: false };
-    // setTasks([...tasks, newTask]);
   }
 
   function toggleTaskCompleted(id, completedStatus) {
@@ -88,16 +86,6 @@ function App() {
         console.error('There was an error!', error);
       });
 
-    // const updatedTasks = tasks.map(task => {
-    //   // if this task has the same ID as the edited task
-    //   if (id === task.id) {
-    //     // use object spread to make a new obkect
-    //     // whose `completed` prop has been inverted
-    //     return {...task, completed: completedStatus}
-    //   }
-    //   return task;
-    // });
-    // setTasks(updatedTasks);
   }
 
 
@@ -135,8 +123,6 @@ function App() {
         console.error('There was an error!', error);
       });
       
-    // const remainingTasks = tasks.filter(task => id !== task.id);
-    // setTasks(remainingTasks);
   }
 
 
@@ -168,7 +154,6 @@ function App() {
             setTasks(editedTaskList);
         })
         .catch(error => {
-            // this.setState({ errorMessage: error.toString() });
             console.error('There was an error!', error);
         });
 
@@ -241,9 +226,6 @@ function App() {
     //         console.error('There was an error!', error);
     //     });
 
-    // if (tasks.length - prevTaskLength === -1) {
-    //   listHeadingRef.current.focus();
-    // }
   }, [tasks.length, prevTaskLength]);
 
 

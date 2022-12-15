@@ -13,11 +13,10 @@ app.use(express.urlencoded({ extended: true }));
 
 
 app.use(cors());
-// app.options('*', cors());
+// If we wanted to restrict the origin of HTTP requests:
 // var corsOptions = {
-//   origin: "http://localhost:8081"
+//   origin: "http://localhost:3000"
 // };
-
 // app.use(cors(corsOptions));
 
 // Controller containing the CRUD methods
