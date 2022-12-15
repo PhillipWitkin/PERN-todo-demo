@@ -1,5 +1,4 @@
 const TaskModel = require("./models/task");
-// const Op = db.Sequelize.Op;
 
 // Create and Save a new Task
 exports.create = (req, res, next) => {
@@ -52,19 +51,20 @@ exports.findAll = (req, res, next) => {
 // Update a Task by the id in the request
 exports.update = async (req, res) => {
   res.set("Access-Control-Allow-Origin", "*"); 
-    const id = req.params.id;
-    const task = await TaskModel.findByPk(id);
-    if (task != null){
-        // console.log("Found ", task);
-        task.set(req.body);
-        await task.save();
-        return res.json(task);
-    } else {
-        return res.send({
-            message: `Cannot update Task with id=${id}.`
-        });
-    }
+  const id = req.params.id;
+  const task = await TaskModel.findByPk(id);
+  if (task != null){
+    // console.log("Found ", task);
+    task.set(req.body);
+    await task.save();
+    return res.json(task);
+  } else {
+    return res.send({
+      message: `Cannot update Task with id=${id}.`
+    });
+  }
 
+    // using only promises:
     // task.update(req.body, {
     //   where: { id: id },
     //   returning: true,

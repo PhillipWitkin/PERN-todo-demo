@@ -13,11 +13,10 @@ app.use(express.urlencoded({ extended: true }));
 
 
 app.use(cors());
-// app.options('*', cors());
+// If we wanted to restrict the origin of HTTP requests:
 // var corsOptions = {
-//   origin: "http://localhost:8081"
+//   origin: "http://localhost:3000"
 // };
-
 // app.use(cors(corsOptions));
 
 // Controller containing the CRUD methods
@@ -41,9 +40,7 @@ app.delete("/api/tasks/:id", tasksController.delete);
 
 const initApp = async () => {
   console.log("Testing the database connection..");
-  /**
-   * Test the database connection to Sequelize.
-   */
+  // Test the database connection to Sequelize
   try {
       await db.authenticate();
       console.log("Connection has been established successfully.");
@@ -58,17 +55,16 @@ const initApp = async () => {
               console.log("Failed to sync db: " + err.message);
           });
       
-      // Syncronize the Task model.
+      // Syncronize the Task model (defined in models/task.js) with database table.
       TaskModel.sync({
           alter: true,
       })
       .then(() => {
           console.log("Synced tasks table");
+          // seed table if it has no entries
           TaskModel.findAndCountAll()
           .then(result => {
-            if (result.count < 1) {
-                // do you thing
-                
+            if (result.count < 1) {                
                 console.log("Seeding empty Tasks table...");
                 TaskModel.bulkCreate([{
                     name: 'Eat',
