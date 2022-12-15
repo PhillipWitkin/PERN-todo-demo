@@ -1,6 +1,6 @@
 # PERN Stack TODO App
 
-## **Purpose** - Demonstrate a simple TODO full-stack application with a Postgres database, Node Express API backend, and React frontend for containerization in Docker
+### **Purpose** - Demonstrate a simple TODO full-stack application with a Postgres database, Node Express API backend, and React frontend for containerization in Docker
 #  
 ### **Description** - This is a simple PERN stack application, a Todo List which performs CRUD operations on a single resource. It consists of a React front-end, back-end API using Node and Express, and persisting data in a Postresql database. 
 * The front end in React is based off https://github.com/mdn/todo-react, which is just a React front-end that uses only mock data. Fetch API calls were added to connect it to a back-end   
@@ -25,7 +25,7 @@
   * In case there of a merge conflict, we can update all remote branches, but save merging for later using git fetch <remote>:
     * `git fetch upstream`
 
-###  Switch to 'dockerized' branch
+###  Switch to the 'dockerized' branch
 * Navigate to the root of your local repository
 * Checkout to the dockerized branch by running 
   * `git checkout dockerized`
