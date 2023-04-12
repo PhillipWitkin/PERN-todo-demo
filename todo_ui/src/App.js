@@ -90,21 +90,6 @@ function App() {
 
   function deleteTask(id) {
     // delete request to /tasks/id
-    // fetch(ApiUrl + `/tasks/${id}`,  { method: 'DELETE' })
-    //   .then(response => {
-    //     const isJson = response.headers.get('content-type')?.includes('application/json');
-    //     return isJson && response.json();
-    //   })
-    //   .then(data => {
-    //     console.log("data:", data);
-    //     const remainingTasks = tasks.filter(task => id !== task.id);
-    //     setTasks(remainingTasks);
-    //   })
-    //   .catch(error => {
-    //     console.error('There was an error!', error);
-    //   });
-    
-    // delete request to /tasks/id
     fetch(ApiUrl + `/tasks/${id}`,  { method: 'DELETE' })  
       .then(async response => {
         const data = await response.json();
@@ -206,25 +191,6 @@ function App() {
           console.error('There was an error!', error);
         });
     
-    // fetch(ApiUrl + "/tasks")
-    //     .then(async response => {
-    //         const isJson = response.headers.get('content-type')?.includes('application/json');
-    //         const data = isJson && await response.json();
-
-    //         // check for error response
-    //         if (!response.ok) {
-    //             // get error message from body or default to response status
-    //             const error = (data && data.message) || response.status;
-    //             return Promise.reject(error);
-    //         }
-    //         setTasks(data);
-    //         if (tasks.length - prevTaskLength === -1) {
-    //           listHeadingRef.current.focus();
-    //         }
-    //     })
-    //     .catch(error => {
-    //         console.error('There was an error!', error);
-    //     });
   }, [tasks.length, prevTaskLength]);
 
 
