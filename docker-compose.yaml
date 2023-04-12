@@ -37,41 +37,42 @@ services:
       - todo-db
 
 
-  # todo-api:
-  #   container_name: todo_api_container
-  #   build: todo_api/
-  #   stdin_open: true
-  #   tty: true
-  #   depends_on:
-  #     todo-db:
-  #       condition: service_healthy
-  #   ports:
-  #     - "8082:8082"
-  #   environment: 
-  #     NODE_ENV: development
-  #     PORT: 8082
-  #     POSTGRES_HOST: todo-db
-  #     POSTGRES_USER: postgres
-  #     POSTGRES_PASSWORD: postgres
-  #     POSTGRES_PORT: 5432
-  #     POSTGRES_DB: todo_db
-
+  todo-api:
+    container_name: todo_api_container
+    build: todo_api/
+    stdin_open: true
+    tty: true
+    depends_on:
+      todo-db:
+        condition: service_healthy
+    ports:
+      - "8082:8082"
+    environment: 
+      NODE_ENV: development
+      PORT: 8082
+      POSTGRES_HOST: todo-db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DB: todo_db
+   
+    command: sh -c "npm run migrate && npm run seed && npm start"
   #   # volumes:
   #   #   - ./todo_api/:/app:Z
 
-  #   command: npm run start:dev
+ 
 
-  # todo-ui:
-  #   container_name: todo_ui_container
-  #   build: todo_ui/
-  #   depends_on:
-  #     - 'todo-api'
-  #   ports:
-  #     - '3000:3000'
-  #   # volumes:
-  #   #   - ./todo_ui/:/app:Z
+  todo-ui:
+    container_name: todo_ui_container
+    build: todo_ui/
+    depends_on:
+      - 'todo-api'
+    ports:
+      - '3000:3000'
+    # volumes:
+    #   - ./todo_ui/:/app:Z
     
-  #   command: npm start
+    command: npm start
 
 volumes:
   pgdatasource:
