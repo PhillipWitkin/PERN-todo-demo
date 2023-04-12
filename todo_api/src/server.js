@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-app.use(cors());
+app.use(cors()); 
 // If we wanted to restrict the origin of HTTP requests:
 // var corsOptions = {
 //   origin: "http://localhost:3000"
